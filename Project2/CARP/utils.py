@@ -9,16 +9,6 @@ def read_file(instance_filename):
     Gragh[][][0] is cost, Gragh[][][1] is demand
     """
 
-    """
-    NAME
-    VERTICES
-    DEPOT
-    REQUIRED EDGES
-    NON-REQUIRED EDGES
-    VEHICLES
-    CAPACITY
-    TOTAL COST OF REQUIRED EDGES
-    """
     file_args = {}
     demand_edge = []
     with open(instance_filename, 'r', encoding='utf-8') as instance_file:
@@ -34,7 +24,7 @@ def read_file(instance_filename):
 
             elif cnt == 8:
                 n = int(file_args['VERTICES'])
-                gragh = np.full((n, n, 2), INT_MAX)
+                graph = np.full((n, n), INT_MAX)
 
             else:
 
@@ -42,11 +32,8 @@ def read_file(instance_filename):
                     replace("   ", " ").\
                     split(" ")
 
-                gragh[int(idx_a) - 1, int(idx_b) - 1, :] = \
-                    [int(cost), int(demand)]
-
-                gragh[int(idx_b) - 1, int(idx_a) - 1, :] = \
-                    [int(cost), int(demand)]
+                graph[int(idx_a) - 1, int(idx_b) - 1] = int(cost)
+                graph[int(idx_b) - 1, int(idx_a) - 1] = int(cost)
 
                 if demand > 0:
                     demand_edge.append(
@@ -54,7 +41,7 @@ def read_file(instance_filename):
 
             cnt += 1
 
-    return file_args, gragh
+    return file_args, graph, demand_edge
 
 
 def floyd(gragh):
