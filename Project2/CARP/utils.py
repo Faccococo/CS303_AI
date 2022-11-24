@@ -1,4 +1,6 @@
 import numpy as np
+import re
+
 
 INT_MAX = 2147483647
 
@@ -28,9 +30,10 @@ def read_file(instance_filename):
 
             else:
 
-                [idx_a, idx_b, cost, demand] = line.strip().replace("   ", " ").\
-                    replace("   ", " ").\
-                    split(" ")
+                # [idx_a, idx_b, cost, demand] = line.strip().replace("   ", " ").\
+                #     replace("   ", " ").\
+                #     split(" ")
+                [idx_a, idx_b, cost, demand] = re.split(r"[ ]+", line.strip())
 
                 graph[int(idx_a) - 1, int(idx_b) - 1] = int(cost)
                 graph[int(idx_b) - 1, int(idx_a) - 1] = int(cost)
@@ -38,11 +41,11 @@ def read_file(instance_filename):
                 demand = int(demand)
                 if demand > 0:
                     demand_edge.append(
-                        (int(idx_a) - 1, int(idx_b) - 1), demand)
+                        ((int(idx_a) - 1, int(idx_b) - 1), demand))
 
             cnt += 1
 
-    return file_args, graph, demand_edge
+    return file_args, floyd(graph), demand_edge
 
 
 def floyd(gragh):
