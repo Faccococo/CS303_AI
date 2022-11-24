@@ -1,36 +1,11 @@
 import numpy as np
 
-
-class Gragh:
-    def __init__(self, n):
-        """
-        n is the vertices number in the gragh
-        """
-        self.vertices = []
-        for i in range(n):
-            self.vertices.append(Node(i))
-
-    def addEdge(self, i, j, cost, demand):
-        self.vertices[i].addEdge(self.vertices[j], cost, demand)
-        self.vertices[j].addEdge(self.vertices[i], cost, demand)
-
-    def get_vertices(self, i):
-        return self.vertices[i]
-
-
-class Node:
-
-    def __init__(self, n) -> None:
-        self.neighbors = []  # neighbors[i] = (node, cost, demand)
-        self.idx = n
-
-    def addEdge(self, node, cost, demand):
-        self.neighbors.append((node, cost, demand))
+INT_MAX = 2147483647
 
 
 def read_file(instance_filename):
     """
-    return a dictionary "file_args" and a numpy array "Gragh" with size (VERTICES, VERTICES, 2).
+    read a dat file in this project. Return a dictionary "file_args" and a numpy array "Gragh" with size (VERTICES, VERTICES, 2).
     Gragh[][][0] is cost, Gragh[][][1] is demand
     """
 
@@ -58,15 +33,40 @@ def read_file(instance_filename):
 
             elif cnt == 8:
                 n = int(file_args['VERTICES'])
-                gragh = Gragh(n)
+                gragh = np.full((n, n, 2), INT_MAX)
 
             else:
-                # TODO: read edges
+
                 [idx_a, idx_b, cost, demand] = line.strip().replace("   ", " ").\
                     replace("   ", " ").\
                     split(" ")
-                gragh.addEdge(int(idx_a) - 1, int(idx_b) - 1,
-                              int(cost), int(demand))
+
+                gragh[int(idx_a) - 1, int(idx_b) - 1, :] = \
+                    [int(cost), int(demand)]
+
+                gragh[int(idx_b) - 1, int(idx_a) - 1, :] = \
+                    [int(cost), int(demand)]
+
             cnt += 1
 
     return file_args, gragh
+
+
+def floyd(gragh):
+    distance = gragh.copy()
+
+    vertices_idx = range(len(gragh))
+
+    for i in vertices_idx:
+        distance[i, i] = 0
+
+    for i in vertices_idx:
+        i_to_cost = distance[i]
+        to_i_cost = distance[:, i]
+        for to_i_node in range(len(to_i_cost)):
+            for i_to_node in range(len(i_to_cost)):
+                if distance[to_i_node, i_to_node] > to_i_cost[to_i_node] + i_to_cost[i_to_node]:
+                    distance[to_i_node, i_to_node] = to_i_cost[to_i_node] + \
+                        i_to_cost[i_to_node]
+
+    return distance
