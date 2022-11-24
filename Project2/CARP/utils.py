@@ -20,6 +20,7 @@ def read_file(instance_filename):
     TOTAL COST OF REQUIRED EDGES
     """
     file_args = {}
+    demand_edge = []
     with open(instance_filename, 'r', encoding='utf-8') as instance_file:
         cnt = 0
         for line in instance_file:
@@ -46,6 +47,10 @@ def read_file(instance_filename):
 
                 gragh[int(idx_b) - 1, int(idx_a) - 1, :] = \
                     [int(cost), int(demand)]
+
+                if demand > 0:
+                    demand_edge.append(
+                        (int(idx_a) - 1, int(idx_b) - 1), demand)
 
             cnt += 1
 
