@@ -35,6 +35,7 @@ def read_file(instance_filename):
                 graph[int(idx_a) - 1, int(idx_b) - 1] = int(cost)
                 graph[int(idx_b) - 1, int(idx_a) - 1] = int(cost)
 
+                demand = int(demand)
                 if demand > 0:
                     demand_edge.append(
                         (int(idx_a) - 1, int(idx_b) - 1), demand)
