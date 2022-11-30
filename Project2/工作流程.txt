@@ -1,7 +1,10 @@
 readData()  ->  file_args, floyd 后的graph, 原始graph，需要执行任务的边列表
+
 calRoute() -> return a list such as 
 [(2,3),(3,4),(6,8)] (we can devided it by demand later)
+
 calCost -> divide the list by demand, calculate the cost
+
 print result.
 
 

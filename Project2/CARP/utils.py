@@ -7,8 +7,8 @@ INT_MAX = 1000000000
 
 def readData(instance_filename):
     """
-    read a dat file in this project. Return a dictionary "file_args" and a numpy array "Gragh" with size (VERTICES, VERTICES, 2).
-    Gragh[][][0] is cost, Gragh[][][1] is demand
+    read a dat file in this project. Return a dictionary "file_args" and a numpy array "graph" with size (VERTICES, VERTICES, 2).
+    Graph[][][0] is cost, Graph[][][1] is demand
     """
 
     file_args = {}
@@ -47,21 +47,10 @@ def readData(instance_filename):
 
     return file_args, graph, floyd(graph), demand_edge
 
+def floyd(graph):
+    distance = graph.copy()
 
-def calRoute():
-
-    pass
-
-
-def calCost():
-
-    pass
-
-
-def floyd(gragh):
-    distance = gragh.copy()
-
-    vertices_idx = range(len(gragh))
+    vertices_idx = range(len(graph))
 
     for i in vertices_idx:
         distance[i, i] = 0
@@ -77,6 +66,52 @@ def floyd(gragh):
 
     return distance
 
+def divide_route(demand_edge):
+    routes = []
+    for edge in demand_edge:
+        route = [edge]
+        routes.append(route)
+    return routes
 
-def printResult():
-    pass
+def cal_cost(routes, graph, distance, depot):
+    """
+    routes: routes the car deal
+    graph: the origin graph before floyd
+    distance: the graph after floyd
+    depot: the depot pos
+    """
+    cost = 0
+    
+
+    for route in routes:
+        last_point = depot
+        for edge in route:
+            (start_point, end_point) = edge
+            cost += distance[last_point][start_point]
+            cost += graph[start_point][end_point]
+            last_point = end_point
+        cost += distance[last_point][depot]
+    return cost
+
+def print_result(routes, cost):
+    for route in routes:
+        result += "0,"
+        for node in route:
+            result += ("("+str(node[0][0] + 1) + "," +
+                    str(node[0][1] + 1)+")" + ",")
+        result += "0,"
+    result = result.strip(',')
+    result += "\n"
+    result += "q "
+    result += str(cost)
+    return(result)
+
+
+
+
+
+
+
+
+
+
