@@ -40,12 +40,68 @@ def readData(instance_filename):
 
                 demand = int(demand)
                 if demand > 0:
-                    demand_edge.append(
-                        ((int(idx_a) - 1, int(idx_b) - 1), demand))
+                    demand_edge.append((int(idx_a) - 1, int(idx_b) - 1))
+                    demand_edge.append((int(idx_b) - 1, int(idx_a) - 1))
 
             cnt += 1
 
     return file_args, graph, floyd(graph), demand_edge
+
+def divide_route(demand_edge):
+    routes = []
+    for edge in demand_edge:
+        route = []
+        add_edge(edge, route, demand_edge)
+        routes.append(route)
+    return routes
+
+def path_scanning():
+    pass
+
+def cal_cost(routes, graph, distance, depot):
+    """
+    routes: routes the car deal
+    graph: the origin graph before floyd
+    distance: the graph after floyd
+    depot: the depot pos
+    """
+    cost = 0
+    
+
+    for route in routes:
+        last_point = depot
+        for edge in route:
+            (start_point, end_point) = edge
+            cost += distance[last_point, start_point]
+            cost += graph[start_point, end_point]
+            last_point = end_point
+        cost += distance[last_point, depot]
+    return cost
+
+def print_result(routes, cost):
+    result = "s "
+    for route in routes:
+        result += "0,"
+        for edge in route:
+            result += ("("+str(edge[0] + 1) + "," +
+                    str(edge[1] + 1)+")" + ",")
+        result += "0,"
+    result = result.strip(',')
+    result += "\n"
+    result += "q "
+    result += str(cost)
+    print(result)
+
+def delete_edge(edge, demand_edge):
+    (a, b) = edge
+    if (a, b) in demand_edge:
+        demand_edge.remove((a, b))
+    elif (b, a) in demand_edge:
+        demand_edge.remove((b, a))
+
+def add_edge(edge, route, demand_edge):
+    route.append(edge)
+    delete_edge(edge, demand_edge)
 
 def floyd(graph):
     distance = graph.copy()
@@ -65,51 +121,6 @@ def floyd(graph):
                         i_to_cost[i_to_node]
 
     return distance
-
-def divide_route(demand_edge):
-    routes = []
-    for edge in demand_edge:
-        route = [edge]
-        routes.append(route)
-    return routes
-
-def cal_cost(routes, graph, distance, depot):
-    """
-    routes: routes the car deal
-    graph: the origin graph before floyd
-    distance: the graph after floyd
-    depot: the depot pos
-    """
-    cost = 0
-    
-
-    for route in routes:
-        last_point = depot
-        for edge in route:
-            (start_point, end_point) = edge
-            cost += distance[last_point][start_point]
-            cost += graph[start_point][end_point]
-            last_point = end_point
-        cost += distance[last_point][depot]
-    return cost
-
-def print_result(routes, cost):
-    for route in routes:
-        result += "0,"
-        for node in route:
-            result += ("("+str(node[0][0] + 1) + "," +
-                    str(node[0][1] + 1)+")" + ",")
-        result += "0,"
-    result = result.strip(',')
-    result += "\n"
-    result += "q "
-    result += str(cost)
-    return(result)
-
-
-
-
-
 
 
 
