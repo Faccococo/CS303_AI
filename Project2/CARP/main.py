@@ -1,6 +1,6 @@
 import sys
 import numpy as np
-from utils import read_file
+from utils_d import read_file
 
 args = sys.argv[1:]
 instance_filename = args[0]
