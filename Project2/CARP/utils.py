@@ -5,7 +5,7 @@ import re
 INT_MAX = 1000000000
 
 
-def read_file(instance_filename):
+def readData(instance_filename):
     """
     read a dat file in this project. Return a dictionary "file_args" and a numpy array "Gragh" with size (VERTICES, VERTICES, 2).
     Gragh[][][0] is cost, Gragh[][][1] is demand
@@ -45,7 +45,17 @@ def read_file(instance_filename):
 
             cnt += 1
 
-    return file_args, floyd(graph), demand_edge
+    return file_args, graph, floyd(graph), demand_edge
+
+
+def calRoute():
+
+    pass
+
+
+def calCost():
+
+    pass
 
 
 def floyd(gragh):
@@ -66,3 +76,7 @@ def floyd(gragh):
                         i_to_cost[i_to_node]
 
     return distance
+
+
+def printResult():
+    pass
