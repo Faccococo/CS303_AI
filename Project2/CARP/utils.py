@@ -68,7 +68,7 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
     final_routes = []
 
     for _ in range(INT_MAX):
-        if time.time() - start > float(terminate) - 2:
+        if time.time() - start > float(terminate) - 0.25:
             break
         last_point = depot
         routes = []
@@ -78,6 +78,7 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             carry = 0
             while carry < capacity:
                 edges_to_choose = find_minimal(last_point, demand_edges_d, distance)
+                # edges_to_choose = demand_edges_d
                 # if carry <= capacity / 2:
                 #     edges_to_choose = find_maximal(depot, edges_to_choose, distance)
                 # elif carry > capacity / 2:
