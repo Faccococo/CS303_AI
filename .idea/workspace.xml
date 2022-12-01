@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="a851b42f-0e6c-4aad-95d4-cf9ecce024d5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Project2/CARP/CARP_solver.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project2/CARP/CARP_solver.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project2/CARP/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/Project2/CARP/main.py" afterDir="false" />
-    </list>
+    <list default="true" id="a851b42f-0e6c-4aad-95d4-cf9ecce024d5" name="Changes" comment="1" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -43,6 +40,7 @@
       <updated>1669186259469</updated>
       <workItem from="1669186261779" duration="214000" />
       <workItem from="1669390851437" duration="100000" />
+      <workItem from="1669881141298" duration="81000" />
     </task>
     <servers />
   </component>
@@ -59,5 +57,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="1" />
+    <option name="LAST_COMMIT_MESSAGE" value="1" />
   </component>
 </project>

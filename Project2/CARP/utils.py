@@ -57,35 +57,53 @@ def divide_route(demand_edge):
     return routes
 
 
-def path_scanning(depot, distance, demand_graph, demand_edges, capacity, random_seed):
-    random.seed(random_seed)
+def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate, out):
+    """
+    args: depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate
+    """
+    # random.seed(random_seed)
+    init_cost = INT_MAX
+    final_routes = []
 
-    last_point = depot
-    routes = []
-    while demand_edges:
-        route = []
-        carry = 0
-        while carry < capacity:
-            edges_to_choose = find_minimal(last_point, demand_edges, distance)
-            if carry <= capacity / 2:
-                edges_to_choose = find_maximal(depot, edges_to_choose, distance)
-            elif carry > capacity / 2:
-                edges_to_choose = find_minimal(depot, edges_to_choose, distance)
-            if not edges_to_choose: break
+    for _ in range(iter_num):
+        if time.time() - start > float(terminate):
+            break
+        last_point = depot
+        routes = []
+        demand_edges_d = demand_edges.copy()
+        while demand_edges_d:
+            route = []
+            carry = 0
+            while carry < capacity:
+                edges_to_choose = find_minimal(last_point, demand_edges_d, distance)
+                if carry <= capacity / 2:
+                    edges_to_choose = find_maximal(depot, edges_to_choose, distance)
+                elif carry > capacity / 2:
+                    edges_to_choose = find_minimal(depot, edges_to_choose, distance)
+                if not edges_to_choose: break
 
-            edges_to_choose = list(filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
+                edges_to_choose = list(filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
 
-            if edges_to_choose:
-                edge_choose = random.choice(edges_to_choose)
+                if edges_to_choose:
+                    edge_choose = random.choice(edges_to_choose)
 
-                add_edge(edge_choose, route, demand_edges)
-                carry += demand_graph[edge_choose[0], edge_choose[1]]
+                    add_edge(edge_choose, route, demand_edges_d)
+                    carry += demand_graph[edge_choose[0], edge_choose[1]]
+                    last_point = edge_choose[1]
 
-            else:
-                break
+                else:
+                    break
 
-        routes.append(route)
-    return routes
+            routes.append(route)
+
+        cost = cal_cost(routes, graph, distance, depot)
+        if cost < init_cost:
+            final_routes = routes
+            init_cost = cost
+        # print(cost, init_cost)
+    out.append(final_routes)
+    out.append(init_cost)
+    return final_routes, init_cost
 
 
 def cal_cost(routes, graph, distance, depot):
