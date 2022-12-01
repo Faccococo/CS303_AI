@@ -1,7 +1,8 @@
-from utils import *
+import multiprocessing
 import sys
 import time
-from multiprocessing import Process
+
+from utils import *
 
 start = time.time()
 args = sys.argv[1:]
@@ -18,35 +19,25 @@ non_required_edge_num = int(file_args['NON-REQUIRED EDGES'])
 edge_num = required_edge_num + non_required_edge_num
 capacity = int(file_args['CAPACITY'])
 iter_num = 5000
+process_num = 8
 # out[i] is a list, out[i] = [routes, cost]
-outs = [[], [], [], []]
+jobs = []
 
-p1 = Process(target=path_scanning,
-             args=(
-                 depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[0]))
+q = multiprocessing.Queue()
+for i in range(process_num):
+    p = multiprocessing.Process(target=path_scanning,
+                                args=(
+                                    depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num,
+                                    RANDOM_SEED, start,
+                                    time,
+                                    TERMINATE, q))
+    jobs.append(p)
+    p.start()
 
+for p in jobs:
+    p.join()
 
-p2 = Process(target=path_scanning,
-             args=(
-                 depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[1]))
-
-p3 = Process(target=path_scanning,
-             args=(
-                 depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[2]))
-
-p4 = Process(target=path_scanning,
-             args=(
-                 depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[3]))
-
-p1.start()
-p2.start()
-p3.start()
-p4.start()
-
-p1.join()
-p2.join()
-p3.join()
-p4.join()
+outs = [q.get() for j in jobs]
 
 [routes, cost] = outs[0]
 for out in outs:
@@ -57,5 +48,5 @@ for out in outs:
 # routes = divide_route(demand_edges)
 # routes, cost = path_scanning(depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[0])
 # print(routes)
-print(time.time() - start)
+# print(time.time() - start)
 print_result(routes, cost)

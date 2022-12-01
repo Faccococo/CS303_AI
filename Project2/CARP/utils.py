@@ -1,6 +1,7 @@
-import numpy as np
-import re
 import random
+import re
+
+import numpy as np
 
 INT_MAX = 1000000000
 
@@ -57,7 +58,8 @@ def divide_route(demand_edge):
     return routes
 
 
-def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate, out):
+def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
+                  terminate, q):
     """
     args: depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate
     """
@@ -82,7 +84,8 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
                     edges_to_choose = find_minimal(depot, edges_to_choose, distance)
                 if not edges_to_choose: break
 
-                edges_to_choose = list(filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
+                edges_to_choose = list(
+                    filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
 
                 if edges_to_choose:
                     edge_choose = random.choice(edges_to_choose)
@@ -101,9 +104,8 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             final_routes = routes
             init_cost = cost
         # print(cost, init_cost)
-    out.append(final_routes)
-    out.append(init_cost)
-    return final_routes, init_cost
+    q.put([final_routes, init_cost])
+    # return final_routes, init_cost
 
 
 def cal_cost(routes, graph, distance, depot):
