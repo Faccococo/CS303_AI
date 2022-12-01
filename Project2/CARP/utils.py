@@ -2,7 +2,6 @@ import numpy as np
 import re
 import random
 
-
 INT_MAX = 1000000000
 
 
@@ -48,6 +47,7 @@ def readData(instance_filename):
 
     return file_args, graph, floyd(graph), demand_graph, demand_edge
 
+
 def divide_route(demand_edge):
     routes = []
     for edge in demand_edge:
@@ -56,10 +56,10 @@ def divide_route(demand_edge):
         routes.append(route)
     return routes
 
-def path_scanning(depot, distance, demand_graph, demand_edges, capacity, random_seed):
 
+def path_scanning(depot, distance, demand_graph, demand_edges, capacity, random_seed):
     random.seed(random_seed)
-    
+
     last_point = depot
     routes = []
     while demand_edges:
@@ -73,20 +73,20 @@ def path_scanning(depot, distance, demand_graph, demand_edges, capacity, random_
                 edges_to_choose = find_minimal(depot, edges_to_choose, distance)
             if not edges_to_choose: break
 
-            edges_to_choose = list(filter(lambda edge : demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
+            edges_to_choose = list(filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
 
             if edges_to_choose:
                 edge_choose = random.choice(edges_to_choose)
 
                 add_edge(edge_choose, route, demand_edges)
                 carry += demand_graph[edge_choose[0], edge_choose[1]]
-                
+
             else:
-                break 
+                break
 
         routes.append(route)
     return routes
-    
+
 
 def cal_cost(routes, graph, distance, depot):
     """
@@ -96,7 +96,6 @@ def cal_cost(routes, graph, distance, depot):
     depot: the depot pos
     """
     cost = 0
-    
 
     for route in routes:
         last_point = depot
@@ -108,19 +107,21 @@ def cal_cost(routes, graph, distance, depot):
         cost += distance[last_point, depot]
     return cost
 
+
 def print_result(routes, cost):
     result = "s "
     for route in routes:
         result += "0,"
         for edge in route:
-            result += ("("+str(edge[0] + 1) + "," +
-                    str(edge[1] + 1)+")" + ",")
+            result += ("(" + str(edge[0] + 1) + "," +
+                       str(edge[1] + 1) + ")" + ",")
         result += "0,"
     result = result.strip(',')
     result += "\n"
     result += "q "
     result += str(cost)
     print(result)
+
 
 def delete_edge(edge, demand_edge):
     (a, b) = edge
@@ -129,9 +130,11 @@ def delete_edge(edge, demand_edge):
     if (b, a) in demand_edge:
         demand_edge.remove((b, a))
 
+
 def add_edge(edge, route, demand_edges):
     route.append(edge)
     delete_edge(edge, demand_edges)
+
 
 def floyd(graph):
     distance = graph.copy()
@@ -148,9 +151,10 @@ def floyd(graph):
             for i_to_node in range(len(i_to_cost)):
                 if distance[to_i_node, i_to_node] > to_i_cost[to_i_node] + i_to_cost[i_to_node]:
                     distance[to_i_node, i_to_node] = to_i_cost[to_i_node] + \
-                        i_to_cost[i_to_node]
+                                                     i_to_cost[i_to_node]
 
     return distance
+
 
 def find_minimal(init_pos, demand_edges, distance):
     """
@@ -169,7 +173,8 @@ def find_minimal(init_pos, demand_edges, distance):
             min_edge.append(edge)
 
     return min_edge
-    
+
+
 def find_maximal(init_pos, demand_edges, distance):
     """
     return a list, which contain edges in demand_edges that have maximal distance to init_pos
@@ -187,7 +192,3 @@ def find_maximal(init_pos, demand_edges, distance):
             max_edge.append(edge)
 
     return max_edge
-
-    
-
-
