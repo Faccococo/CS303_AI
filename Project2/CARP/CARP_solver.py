@@ -18,14 +18,14 @@ required_edge_num = int(file_args['REQUIRED EDGES'])
 non_required_edge_num = int(file_args['NON-REQUIRED EDGES'])
 edge_num = required_edge_num + non_required_edge_num
 capacity = int(file_args['CAPACITY'])
-iter_num = 50000
+iter_num = 5000
 process_num = 8
 # out[i] is a list, out[i] = [routes, cost]
 jobs = []
 
 q = multiprocessing.Queue()
 for i in range(process_num):
-    p = multiprocessing.Process(target=path_scanning,
+    p = multiprocessing.Process(target=divide_route,
                                 args=(
                                     depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num,
                                     RANDOM_SEED, start,

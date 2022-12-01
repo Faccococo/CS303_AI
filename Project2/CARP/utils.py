@@ -49,17 +49,15 @@ def readData(instance_filename):
     return file_args, graph, floyd(graph), demand_graph, demand_edge
 
 
-def divide_route(demand_edge):
-    routes = []
-    for edge in demand_edge:
-        route = []
-        add_edge(edge, route, demand_edge)
-        routes.append(route)
-    return routes
+def divide_route(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
+                 terminate, q):
+    final_routes, init_cost = path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
+                                            terminate)
+    q.put([final_routes, init_cost])
 
 
 def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
-                  terminate, q):
+                  terminate):
     """
     args: depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate
     """
@@ -77,12 +75,16 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             route = []
             carry = 0
             while carry < capacity:
-                edges_to_choose = find_minimal(last_point, demand_edges_d, distance)
+                edges_to_choose = find_minimal(
+                    last_point, demand_edges_d, distance)
                 if carry <= capacity / 2:
-                    edges_to_choose = find_maximal(depot, edges_to_choose, distance)
+                    edges_to_choose = find_maximal(
+                        depot, edges_to_choose, distance)
                 elif carry > capacity / 2:
-                    edges_to_choose = find_minimal(depot, edges_to_choose, distance)
-                if not edges_to_choose: break
+                    edges_to_choose = find_minimal(
+                        depot, edges_to_choose, distance)
+                if not edges_to_choose:
+                    break
 
                 edges_to_choose = list(
                     filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
@@ -104,8 +106,8 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             final_routes = routes
             init_cost = cost
         # print(cost, init_cost)
-    q.put([final_routes, init_cost])
-    # return final_routes, init_cost
+    # q.put([final_routes, init_cost])
+    return final_routes, init_cost
 
 
 def cal_cost(routes, graph, distance, depot):
@@ -171,7 +173,7 @@ def floyd(graph):
             for i_to_node in range(len(i_to_cost)):
                 if distance[to_i_node, i_to_node] > to_i_cost[to_i_node] + i_to_cost[i_to_node]:
                     distance[to_i_node, i_to_node] = to_i_cost[to_i_node] + \
-                                                     i_to_cost[i_to_node]
+                        i_to_cost[i_to_node]
 
     return distance
 
