@@ -1,5 +1,6 @@
 import numpy as np
 import re
+import random
 
 
 INT_MAX = 1000000000
@@ -27,12 +28,10 @@ def readData(instance_filename):
             elif cnt == 8:
                 n = int(file_args['VERTICES'])
                 graph = np.full((n, n), INT_MAX)
+                demand_graph = np.full((n, n), INT_MAX)
 
             else:
 
-                # [idx_a, idx_b, cost, demand] = line.strip().replace("   ", " ").\
-                #     replace("   ", " ").\
-                #     split(" ")
                 [idx_a, idx_b, cost, demand] = re.split(r"[ ]+", line.strip())
 
                 graph[int(idx_a) - 1, int(idx_b) - 1] = int(cost)
@@ -42,10 +41,12 @@ def readData(instance_filename):
                 if demand > 0:
                     demand_edge.append((int(idx_a) - 1, int(idx_b) - 1))
                     demand_edge.append((int(idx_b) - 1, int(idx_a) - 1))
+                    demand_graph[int(idx_a) - 1, int(idx_b) - 1] = int(demand)
+                    demand_graph[int(idx_b) - 1, int(idx_a) - 1] = int(demand)
 
             cnt += 1
 
-    return file_args, graph, floyd(graph), demand_edge
+    return file_args, graph, floyd(graph), demand_graph, demand_edge
 
 def divide_route(demand_edge):
     routes = []
@@ -55,8 +56,37 @@ def divide_route(demand_edge):
         routes.append(route)
     return routes
 
-def path_scanning():
-    pass
+def path_scanning(depot, distance, demand_graph, demand_edges, capacity, random_seed):
+
+    random.seed(random_seed)
+    
+    last_point = depot
+    routes = []
+    while demand_edges:
+        route = []
+        carry = 0
+        while carry < capacity:
+            edges_to_choose = find_minimal(last_point, demand_edges, distance)
+            if carry <= capacity / 2:
+                edges_to_choose = find_maximal(depot, edges_to_choose, distance)
+            elif carry > capacity / 2:
+                edges_to_choose = find_minimal(depot, edges_to_choose, distance)
+            if not edges_to_choose: break
+
+            edges_to_choose = list(filter(lambda edge : demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
+
+            if edges_to_choose:
+                edge_choose = random.choice(edges_to_choose)
+
+                add_edge(edge_choose, route, demand_edges)
+                carry += demand_graph[edge_choose[0], edge_choose[1]]
+                
+            else:
+                break 
+
+        routes.append(route)
+    return routes
+    
 
 def cal_cost(routes, graph, distance, depot):
     """
@@ -96,12 +126,12 @@ def delete_edge(edge, demand_edge):
     (a, b) = edge
     if (a, b) in demand_edge:
         demand_edge.remove((a, b))
-    elif (b, a) in demand_edge:
+    if (b, a) in demand_edge:
         demand_edge.remove((b, a))
 
-def add_edge(edge, route, demand_edge):
+def add_edge(edge, route, demand_edges):
     route.append(edge)
-    delete_edge(edge, demand_edge)
+    delete_edge(edge, demand_edges)
 
 def floyd(graph):
     distance = graph.copy()
@@ -122,7 +152,42 @@ def floyd(graph):
 
     return distance
 
+def find_minimal(init_pos, demand_edges, distance):
+    """
+    return a list, which contain edges in demand_edges that have minimal distance to init_pos
+    """
+    min_dis = INT_MAX
+    min_edge = []
 
+    for edge in demand_edges:
+        start_pos = edge[0]
+        if distance[init_pos, start_pos] < min_dis:
+            min_dis = distance[init_pos, start_pos]
 
+    for edge in demand_edges:
+        if distance[init_pos, edge[0]] == min_dis:
+            min_edge.append(edge)
+
+    return min_edge
+    
+def find_maximal(init_pos, demand_edges, distance):
+    """
+    return a list, which contain edges in demand_edges that have maximal distance to init_pos
+    """
+    max_dis = 0
+    max_edge = []
+
+    for edge in demand_edges:
+        start_pos = edge[0]
+        if distance[init_pos, start_pos] > max_dis:
+            max_dis = distance[init_pos, start_pos]
+
+    for edge in demand_edges:
+        if distance[init_pos, edge[0]] == max_dis:
+            max_edge.append(edge)
+
+    return max_edge
+
+    
 
 
