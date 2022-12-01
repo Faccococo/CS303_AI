@@ -45,8 +45,7 @@ for out in outs:
         routes = out[0]
         cost = out[1]
 
-# routes = divide_route(demand_edges)
-# routes, cost = path_scanning(depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[0])
-# print(routes)
-# print(time.time() - start)
+# routes = divide_route(demand_edges) routes, cost = path_scanning(depot_pos, graph, distance, demand_graph,
+# demand_edges, capacity, iter_num, RANDOM_SEED, start, time, TERMINATE, outs[0]) print(routes) print(time.time() -
+# start)
 print_result(routes, cost)
