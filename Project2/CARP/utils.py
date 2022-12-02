@@ -49,17 +49,20 @@ def readData(instance_filename):
     return file_args, graph, floyd(graph), demand_graph, demand_edge
 
 
-def divide_route(demand_edge):
-    routes = []
-    for edge in demand_edge:
-        route = []
-        add_edge(edge, route, demand_edge)
-        routes.append(route)
-    return routes
+def divide_route(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
+                 terminate, q):
+    """
+    args: depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate
+    """
+
+    final_routes, init_cost = path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num,
+                                            random_seed, start, time,
+                                            terminate)
+    q.put([final_routes, init_cost])
 
 
 def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time,
-                  terminate, q):
+                  terminate):
     """
     args: depot, graph, distance, demand_graph, demand_edges, capacity, iter_num, random_seed, start, time, terminate
     """
@@ -106,8 +109,8 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             final_routes = routes
             init_cost = cost
         # print(cost, init_cost)
-    q.put([final_routes, init_cost])
-    # return final_routes, init_cost
+    # q.put([final_routes, init_cost])
+    return final_routes, init_cost
 
 
 def cal_cost(routes, graph, distance, depot):
