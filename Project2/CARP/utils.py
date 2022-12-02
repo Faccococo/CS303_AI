@@ -87,7 +87,7 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
                     break
 
                 edges_to_choose = list(
-                    filter(lambda edge: demand_graph[edge[0], edge[1]] < capacity - carry, edges_to_choose))
+                    filter(lambda edge: demand_graph[edge[0], edge[1]] <= capacity - carry, edges_to_choose))
 
                 if edges_to_choose:
                     edge_choose = random.choice(edges_to_choose)
