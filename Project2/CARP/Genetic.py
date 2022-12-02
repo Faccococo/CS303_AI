@@ -81,6 +81,9 @@ def Genetic_reproduce_select(population, graph, distance, depot):
 def Genetic_reproduce_recombine(routes1, routes2, demand_edge):
     # TODO
     demand_edge_d = demand_edge.copy()
+    min_num = min(len(routes1), len(routes2))
+
+
 
     return routes1
 
