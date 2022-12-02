@@ -78,10 +78,11 @@ def Genetic_reproduce_select(population, graph, distance, depot):
     return return_list
 
 
-def Genetic_reproduce_recombine(routes1, routes2):
+def Genetic_reproduce_recombine(routes1, routes2, demand_edge):
     # TODO
+    demand_edge_d = demand_edge.copy()
 
-    return pop1
+    return routes1
 
 
 def Genetic_reproduce_mutate(pop, mutate_rate):
