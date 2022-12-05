@@ -25,7 +25,7 @@ jobs = []
 
 q = multiprocessing.Queue()
 for i in range(process_num):
-    p = multiprocessing.Process(target=path_scanning,
+    p = multiprocessing.Process(target=divide_route,
                                 args=(
                                     depot_pos, graph, distance, demand_graph, demand_edges, capacity, iter_num,
                                     RANDOM_SEED, start,
