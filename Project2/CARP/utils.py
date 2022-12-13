@@ -31,7 +31,7 @@ def readData(instance_filename):
                 demand_graph = np.full((n, n), INT_MAX)
 
             else:
-
+                print(line, re.split(r"[ ]+", line.strip()))
                 [idx_a, idx_b, cost, demand] = re.split(r"[ ]+", line.strip())
 
                 graph[int(idx_a) - 1, int(idx_b) - 1] = int(cost)
@@ -80,7 +80,8 @@ def path_scanning(depot, graph, distance, demand_graph, demand_edges, capacity, 
             route = []
             carry = 0
             while carry < capacity:
-                edges_to_choose = find_minimal(last_point, demand_edges_d, distance)
+                edges_to_choose = find_minimal(
+                    last_point, demand_edges_d, distance)
                 # edges_to_choose = demand_edges_d
                 # if carry <= capacity / 2:
                 #     edges_to_choose = find_maximal(depot, edges_to_choose, distance)
@@ -176,7 +177,7 @@ def floyd(graph):
             for i_to_node in range(len(i_to_cost)):
                 if distance[to_i_node, i_to_node] > to_i_cost[to_i_node] + i_to_cost[i_to_node]:
                     distance[to_i_node, i_to_node] = to_i_cost[to_i_node] + \
-                                                     i_to_cost[i_to_node]
+                        i_to_cost[i_to_node]
 
     return distance
 

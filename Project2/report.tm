@@ -98,6 +98,35 @@
   Variables use in this report is defined below:
 
   <\itemize>
+    <item><math|G<around*|(|V,E|)>:>undirected graph with vertices set
+    <math|V> and edge set <math|E>
+
+    <item><math|s:>start vertice of the graph.
+
+    <item><math|t>: end vertice of the graph.
+
+    <item><math|d:>depot vertice of the graph.
+
+    <item><math|W<rsub|i j>:>least cost when a velhical travel from vertice
+    <math|i> to vertice <math|j>.\ 
+
+    <item><math|E<rsub|d>:>edges need to be served by vehical group
+
+    <item><math|C>:max serve a velhical can offer one time.
+
+    <item><math|<math-it|Cost>>(<math|G,d>,<math|C>):total cost a velhical
+    take after served all demand edges.\ 
+  </itemize>
+
+  Then, a carp problem can be defined as a optimized problem\VTarget function
+  is <em|Cost>(<em|G,d,C>), the objective of an agent is to minimize
+  <em|Cost>(<em|G,d,C>)
+
+  \;
+
+  Other specific name need to be assert is show below.
+
+  <\itemize>
     <item><em|graph>: the graph in CARP, contains some edges needed to be
     served. <em|graph>[<em|i, j>] represente the cost when vehicle travel
     from vertices[i] to vertices[j].If i and j is not connected directly,
@@ -109,11 +138,14 @@
     <item><em|distance>: the graph after doing Floyd.\ 
 
     <\equation*>
-      <em|<math-it|distance>>[<em|i,j>] =[<em|i, j>]
+      <em|<math-it|distance>>[<em|i,j>] =d[<em|i, j>]
     </equation*>
 
     <item><em|middle_vertice>: vertice choosed as \Pjump board\Q in Floyd
     algorithm
+
+    <item><em|connect>ed: if vertice i and vertice j have direct path, or,
+    distance[i, j] \<less\> <math|\<infty\>>
 
     <item><math|V>: the number of vertices in graph
 
@@ -147,7 +179,7 @@
       <math-it|served_amount>\<leqslant\><math-it|capacity>
     </equation*>
 
-    <item>time: total time procedure cost
+    <item><em|time>: total time procedure cost
 
     <item>terminate_time: max time procudure can cost. It is always true that
     time <math|\<leqslant\>> terminate time
@@ -252,6 +284,8 @@
 
   <subsection|Distance Calculate: Shortest Path Algorithm\VFloyd>
 
+  <subsubsection|Introduce>
+
   When doing CARP, a shortest path algorithm is needed to compute distance
   between two vertice. Algorithm used here is Floyd algorithm.
 
@@ -281,7 +315,21 @@
     O<around*|(|V<rsup|3>|)>
   </equation*>
 
+  \;
+
   <space|1em>while <math|V> is the number of vertices
+
+  <subsubsection|Formulation>
+
+  Floyd can be expree as following:
+
+  <\equation*>
+    <math-it|distance><around*|[|i,j|]>=<math-it|Min><around*|(|<math-it|distance><around*|[|i,k|]>+<math-it|distance><around*|[|k,j|]>|)>
+  </equation*>
+
+  where k is vertice connected to both i and j.
+
+  <subsubsection|Pseudo-code>
 
   \ 
 
@@ -326,6 +374,8 @@
 
   <subsubsection|Path-Scanning>
 
+  <paragraph|Introduction>
+
   In Yao's work, a Path-Scanning algorithm is used to when \ initial the
   population while doing memetic algorithm. The core concept of Path-Scanning
   is greedy. For each edge Path-Scanning served, algorithm choose the nearest
@@ -355,6 +405,14 @@
   <space|2em>In this project, since merge-split operator(going to introduced
   next) failed to be used in final code, 3-rd and 4-nd is not used in order
   to keep the randomness.
+
+  <paragraph|Formulation>
+
+  Path-Scanning can be\ 
+
+  \;
+
+  <paragraph|Pseudo-code>
 
   Pseudo-code in this project is show following:
 
@@ -473,6 +531,8 @@
 
     <item>while time \<gtr\> terminate_time / 2, do merge-split to updat
     routes exist.
+
+    <item>In result routes, choose least cost routes.
   </enumerate>
 
   <section|Experiments>
@@ -520,7 +580,37 @@
     END
   </code>
 
-  <subsection|Time analysed>
+  Since test data all have solution, no-result-condition is not considered
+  here.
+
+  <subsection|Solution analysed>
+
+  For some reson, Merge-Split operator is not used in submitted code cause
+  some unsolved bugs.
+
+  Perfomance difference before and after introduce mer-split operater is show
+  followed.
+
+  Data used in following is data given, since it's hard to show data in
+  report.\ 
+
+  \;
+
+  Before
+
+  \;
+
+  <block*|<tformat|<table|<row|<cell|gdb10>|<cell|gbd1>|<cell|egl-s1-A>|<cell|egl-e1-A>|<cell|val7A>|<cell|val4A>|<cell|val1A>>|<row|<cell|275>|<cell|316>|<cell|5412>|<cell|3781>|<cell|280>|<cell|410>|<cell|173>>>>>
+
+  \;
+
+  After
+
+  \;
+
+  <block*|<tformat|<table|<row|<cell|gdb10>|<cell|gbd1>|<cell|egl-s1-A>|<cell|egl-e1-A>|<cell|val7A>|<cell|val4A>|<cell|val1A>>|<row|<cell|275>|<cell|316>|<cell|5308>|<cell|3726>|<cell|283>|<cell|417>|<cell|173>>>>>
+
+  \;
 
   <section|Conclusion>
 
@@ -528,9 +618,23 @@
 
   <subsubsection|Advantage>
 
+  Algorithm use multi-processing to improve performance. By multi-processing,
+  algorithmm is easier to get its upper bound. Also, with the introduce of
+  merge-split, algorithm's upper bound is higher than normal path-scanning
+  algorithm.\ 
+
   <subsubsection|Defect>
 
+  Since the only random operator is merge-split, algorithm's upper bound is
+  still not enough to get best solution. Also, the ratio of path-scanning and
+  merge-split is not perfect, for small data, path-scanning will do lots of
+  duplicate compute, with is a waste of time.
+
   <subsection|Space to improve>
+
+  The ratio of path-scanning and merge-split can be improved to get a better
+  belance. Also, a memetic algorithm is better to introduce randomness, to
+  get best solution.
 
   <\bibliography|bib|tm-plain|reference>
     <\bib-list|3>
@@ -622,24 +726,30 @@
     <associate|auto-13|<tuple|3.2.1|2>>
     <associate|auto-14|<tuple|3.2.2|2>>
     <associate|auto-15|<tuple|3.3|3>>
-    <associate|auto-16|<tuple|3.4|3>>
-    <associate|auto-17|<tuple|3.4.1|3>>
-    <associate|auto-18|<tuple|3.4.2|?>>
-    <associate|auto-19|<tuple|3.5|?>>
+    <associate|auto-16|<tuple|3.3.1|3>>
+    <associate|auto-17|<tuple|3.3.2|3>>
+    <associate|auto-18|<tuple|3.3.3|?>>
+    <associate|auto-19|<tuple|3.4|?>>
     <associate|auto-2|<tuple|1.1|1>>
-    <associate|auto-20|<tuple|4|?>>
-    <associate|auto-21|<tuple|4.1|?>>
-    <associate|auto-22|<tuple|4.1.1|?>>
-    <associate|auto-23|<tuple|4.1.2|?>>
-    <associate|auto-24|<tuple|4.2|?>>
-    <associate|auto-25|<tuple|4.3|?>>
-    <associate|auto-26|<tuple|5|?>>
-    <associate|auto-27|<tuple|5.1|?>>
-    <associate|auto-28|<tuple|5.1.1|?>>
-    <associate|auto-29|<tuple|5.1.2|?>>
+    <associate|auto-20|<tuple|3.4.1|?>>
+    <associate|auto-21|<tuple|3.4.1.1|?>>
+    <associate|auto-22|<tuple|3.4.1.2|?>>
+    <associate|auto-23|<tuple|3.4.1.3|?>>
+    <associate|auto-24|<tuple|3.4.2|?>>
+    <associate|auto-25|<tuple|3.5|?>>
+    <associate|auto-26|<tuple|4|?>>
+    <associate|auto-27|<tuple|4.1|?>>
+    <associate|auto-28|<tuple|4.1.1|?>>
+    <associate|auto-29|<tuple|4.1.2|?>>
     <associate|auto-3|<tuple|1.2|1>>
-    <associate|auto-30|<tuple|5.2|?>>
-    <associate|auto-31|<tuple|5.2|?>>
+    <associate|auto-30|<tuple|4.2|?>>
+    <associate|auto-31|<tuple|4.3|?>>
+    <associate|auto-32|<tuple|5|?>>
+    <associate|auto-33|<tuple|5.1|?>>
+    <associate|auto-34|<tuple|5.1.1|?>>
+    <associate|auto-35|<tuple|5.1.2|?>>
+    <associate|auto-36|<tuple|5.2|?>>
+    <associate|auto-37|<tuple|5.2|?>>
     <associate|auto-4|<tuple|1.3|1>>
     <associate|auto-5|<tuple|2|1>>
     <associate|auto-6|<tuple|2.1|1>>
@@ -764,7 +874,7 @@
       <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-24>>
 
-      <with|par-left|<quote|1tab>|4.3.<space|2spc>Time analysed
+      <with|par-left|<quote|1tab>|4.3.<space|2spc>Solution analysed
       <datoms|<macro|x|<repeat|<arg|x>|<with|font-series|medium|<with|font-size|1|<space|0.2fn>.<space|0.2fn>>>>>|<htab|5mm>>
       <no-break><pageref|auto-25>>
 
