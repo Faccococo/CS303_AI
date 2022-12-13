@@ -147,7 +147,10 @@
       <math-it|served_amount>\<leqslant\><math-it|capacity>
     </equation*>
 
-    <item>
+    <item>time: total time procedure cost
+
+    <item>terminate_time: max time procudure can cost. It is always true that
+    time <math|\<leqslant\>> terminate time
   </itemize>
 
   <subsection|Solution-mark format>
@@ -417,10 +420,6 @@
     return <em|routes>
   </render-code>
 
-  \;
-
-  \;
-
   <subsubsection|Merge-Split Operator>
 
   Merge-Split Operator is first intruduced by X.Yao in 2009<cite|2>, by using
@@ -440,25 +439,41 @@
 
   function merge-split(route)
 
-  \ \ split_point = random(1, length(route))
+  begin
 
-  \ \ subroute1 = route[1...split_point]
+  \ <space|2em>split_point = random(1, length(route))
 
-  \ \ subroute2 = route[split_point+1...length(route)]
+  \ <space|2em>subroute1 = route[1...split_point]
 
-  \ \ merge_distance = distance(subroute1[end], sub-
+  \ <space|2em>subroute2 = route[split_point+1...length(route)]
+
+  <space|2em>merge_distance = distance(subroute1[end], sub-
 
   <space|13em>route2[start])
 
-  \ \ merged_route = subroute1 + [merge_distance] + sub <space|10em>route221
+  \ <space|2em>merged_route = subroute1 +merge_distance + sub-
+  <space|10em>route2
 
-  \ \ return merged_route
+  <space|2em>return merged_route
 
   end
 
   \;
 
   <subsection|Working \]ow>
+
+  <\enumerate>
+    <item>Data reading
+
+    <item>Calculate distances between each vertices. Store the information is
+    distance.
+
+    <item>while time \<less\> terminate_time / 2, \ do path_scanning to get
+    result routes
+
+    <item>while time \<gtr\> terminate_time / 2, do merge-split to updat
+    routes exist.
+  </enumerate>
 
   <section|Experiments>
 
@@ -484,7 +499,26 @@
 
   <subsection|Dataset>
 
-  \;
+  A dataset is built by myself in order to check if algorithm work well when
+  meet some edge conditions. Example is list below
+
+  <\code>
+    NAME : test
+
+    VERTICES : 2
+
+    DEPOT : 1<next-line>REQUIRED EDGES : 2<next-line>NON-REQUIRED EDGES : 0
+  </code>
+
+  <code|VEHICLES : 1<next-line>CAPACITY : 1<next-line>TOTAL COST OF REQUIRED
+  EDGES : 1>
+
+  <\code>
+    NODES \ \ \ \ \ \ COST \ \ \ \ \ \ \ \ DEMAND<next-line>1 \ \ 2
+    \ \ \ \ \ \ \ 13 \ \ \ \ \ \ \ \ \ \ \ \ 1
+
+    END
+  </code>
 
   <subsection|Time analysed>
 
