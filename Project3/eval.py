@@ -1,6 +1,6 @@
 from src import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
 # from agent import Agent
-from agent_sol import Agent
+from agent import Agent
 from tqdm import tqdm # a convenient progress bar
 import torch
 
@@ -16,8 +16,8 @@ if __name__ == "__main__":
     # But in the final evaluation we will use the test set.
 
     data = torch.load("data.pth")
-    label = data["label_train"]
-    feature = data["data_train"]
+    label = data["label"]
+    feature = data["feature"]
 
     scores = []
     for game in tqdm(range(N_EVALS)):
