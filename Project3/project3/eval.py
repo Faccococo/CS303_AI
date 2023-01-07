@@ -1,6 +1,7 @@
-from project3 import Agent
-from project3.src import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
-from tqdm import tqdm  # a convenient progress bar
+from src import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
+# from agent import Agent
+from agent import Agent
+from tqdm import tqdm # a convenient progress bar
 import torch
 
 N_EVALS = 500
@@ -14,16 +15,18 @@ if __name__ == "__main__":
     # The training set (including `data` and `label`) is distributed to you.
     # But in the final evaluation we will use the test set.
 
-    data = torch.load("project3/Model_train/data.pth")
+    data = torch.load("Model_train/data.pth")
     label = data["label"]
     feature = data["feature"]
 
     scores = []
     for game in tqdm(range(N_EVALS)):
+
         # the class information is unavailable at test time.
         target_pos, target_features, target_cls, class_scores = generate_game(n_targets, N_CTPS, feature, label)
         ctps_inter = agent.get_action(target_pos, target_features, class_scores)
         score = evaluate(compute_traj(ctps_inter), target_pos, class_scores[target_cls], RADIUS)
         scores.append(score)
-
+    
     print(torch.stack(scores).float().mean())
+    
