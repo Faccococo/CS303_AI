@@ -23,14 +23,14 @@ class NNet(nn.Module):
         )
 
     def forward(self, feature):
-        score = self.model(feature)
-        return score
+        result = self.model(feature)
+        return result
 
 
 
 class ANN:
     lr = 0.005
-    epochs = 100
+    epochs = 1000
     batch_size = 20
 
     def __init__(self):
@@ -100,8 +100,7 @@ if not os.path.exists('model.pt'):
     model = ANN()
     model.train(feature_train, label_train)
     torch.save(model, "model.pt")
-else: 
-    model = torch.load("model.pt")
+model = torch.load("model.pt")
 model.get_score(feature_test, label_test)
 
 # model = ANN()
