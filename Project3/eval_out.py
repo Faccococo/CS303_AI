@@ -1,5 +1,4 @@
-from project3 import Agent
-from project3.src import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
+from project3 import *
 from tqdm import tqdm  # a convenient progress bar
 import torch
 
@@ -19,11 +18,15 @@ if __name__ == "__main__":
     feature = data["feature"]
 
     scores = []
+    
     for game in tqdm(range(N_EVALS)):
         # the class information is unavailable at test time.
-        target_pos, target_features, target_cls, class_scores = generate_game(n_targets, N_CTPS, feature, label)
-        ctps_inter = agent.get_action(target_pos, target_features, class_scores)
-        score = evaluate(compute_traj(ctps_inter), target_pos, class_scores[target_cls], RADIUS)
+        target_pos, target_features, target_cls, class_scores = generate_game(
+            n_targets, N_CTPS, feature, label)
+        ctps_inter = agent.get_action(
+            target_pos, target_features, class_scores)
+        score = evaluate(compute_traj(ctps_inter), target_pos,
+                         class_scores[target_cls], RADIUS)
         scores.append(score)
 
     print(torch.stack(scores).float().mean())

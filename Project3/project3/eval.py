@@ -1,4 +1,4 @@
-from src import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
+from agent import generate_game, N_CTPS, evaluate, compute_traj, RADIUS
 # from agent import Agent
 from agent import Agent
 from tqdm import tqdm # a convenient progress bar
